@@ -4,8 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -13,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BotaoInterativo() {
     var mensagem by remember { mutableStateOf("") }
@@ -48,26 +49,24 @@ fun BotaoInterativo() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Box(
             modifier = Modifier
-                .background(Color(0xFF6200EE), RoundedCornerShape(8.dp))
+                .combinedClickable(
+                    onClick = {
+                        mensagem = "Você clicou uma vez no botão!"
+                    },
+                    onLongClick = {
+                        mensagem = "Você fez um clique longo no botão!"
+                    }
+                )
                 .padding(horizontal = 24.dp, vertical = 12.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = {
-                            mensagem = "Você clicou uma vez no botão!"
-                        },
-                        onLongPress = {
-                            mensagem = "Você fez um clique longo no botão!"
-                        }
-                    )
-                }
+                .background(Color(0xFF6200EE), shape = RoundedCornerShape(8.dp))
         ) {
             Text(
                 text = "Clique aqui",
                 color = Color.White,
                 fontSize = 18.sp,
+                modifier = Modifier.padding(8.dp),
                 textAlign = TextAlign.Center
             )
         }
